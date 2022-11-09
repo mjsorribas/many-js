@@ -63,6 +63,41 @@ network.base.endpoints() // => Decoded and Parsed Response
 network.ledger.info() // => Decoded and Parsed Response
 ```
 
+### Network Information
+
+To obtain the network information you can use this method:
+
+```
+async function getNetworkInfo() {
+  network.apply([Base]);
+  const data: any = await network.base.status();
+  return data;
+}
+```
+
+You will get a response in json format with this structure:
+
+```
+{
+  status: {
+    protocolVersion: 1,
+    serverName: 'AbciModule(many-ledger)',
+    publicKey: Map(6) {
+      1 => 2,
+      3 => -7,
+      4 => [Array],
+      -1 => 1,
+      -2 => <Buffer 45 49 be 8b 76 a2 79 04 8a 75 b2 1b 69 a6 95 4d 1e f3 67 a3 2f 7a f8 60 ed e2 07 a9 4c 3c bd 35>,
+      -3 => <Buffer 03 e9 ad 6b 54 96 e8 d9 9a d8 4d 19 cd cb 66 ba 4a 52 bd 55 e0 5c b8 69 14 0a 98 de ed 6f 4a 19>
+    },
+    address: 'mahkmntgf27qb3xb4mm4evswbgpuyjgfwjxscdkh2uct4ypqbr',
+    attributes: [ 0, 1, 2, 4, 5, 6, 8, [Array], 1002 ],
+    serverVersion: '0.1.0',
+    timeDeltaInSecs: 300
+  }
+}
+```
+
 ### Account
 
 ```ts

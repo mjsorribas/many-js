@@ -2,7 +2,6 @@ import { Address } from "../../../identity"
 import { NetworkModule } from "../types"
 
 type LedgerAmount = BigInt
-type AttrIndex = number | [number, AttrIndex]
 
 export interface TokenInfoSummary {
   name: string
@@ -16,64 +15,37 @@ export interface TokenInfoSupply {
   maximum?: LedgerAmount
 }
 
-export interface TokenBasicInfo {
+export interface TokenInfo {
   address: Address
   summary: TokenInfoSummary
   supply: TokenInfoSupply
   owner?: Address
 }
 
-export type TokenExtendedInfo = Map<AttrIndex, any>
-
-export interface TokenInfo {
-  info: TokenBasicInfo
-  extended?: TokenExtendedInfo
-}
-
-export interface TokensInfoParam {
-  address: string
-}
-
 export interface TokensCreateParam {
   summary: TokenInfoSummary
-  owner?: string | null
-  distribution?: { [address: string]: LedgerAmount }
+  owner?: Address
+  distribution?: Map<Address, LedgerAmount>
   maximumSupply?: LedgerAmount
-  extended?: TokenExtendedInfo
+  extended?: Map<number, any>
 }
 
-export interface TokensUpdateParam {
+export interface TokensUpdateParams {
   address: Address
   name?: string
-  symbol?: string
   precision?: number
-  owner?: string | null
-  memo?: string
+  owner?: Address | null
+  memo: string // What's a "memo"?
 }
 
-export interface TokensAddExtendedParam {
-  address: Address
-  extended: TokenExtendedInfo
-}
-
-export interface TokensRemoveExtendedParam {
-  address: Address
-  indices: AttrIndex[]
-}
-
-export interface TokensModule extends NetworkModule {
-  info: (data: TokensInfoParam) => Promise<TokenInfo>
+export interface Tokens extends NetworkModule {
+  // info: (data: ) => Promise<unknown>
   create: (
     data: TokensCreateParam,
-    opts?: { nonce?: ArrayBuffer },
-  ) => Promise<TokenBasicInfo>
-  update: (data: TokensUpdateParam, opts?: { nonce?: ArrayBuffer }) => void
-  addExtendedInfo: (
-    data: TokensAddExtendedParam,
-    opts?: { nonce?: ArrayBuffer },
-  ) => void
-  removeExtendedInfo: (
-    data: TokensRemoveExtendedParam,
-    opts?: { nonce?: ArrayBuffer },
-  ) => void
+    opts: { nonce?: ArrayBuffer },
+  ) => Promise<unknown>
+  // update: (
+  //   data: TokensUpdateParams,
+  //   opts: { nonce?: ArrayBuffer },
+  // ) => Promise<unknown>
 }

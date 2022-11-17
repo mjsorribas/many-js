@@ -1,1 +1,1 @@
-export { Tokens } from "./tokens"
+export { TokensModule as Tokens } from "./tokens"

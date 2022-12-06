@@ -8,7 +8,14 @@ support the Many Protocol.
 Instantiate Network and apply modules.
 
 ```ts
-import { Account, Base, Events, IdStore, Ledger, Network } from "many-js"
+import {
+  Account,
+  Base,
+  Events,
+  IdStore,
+  Ledger,
+  Network,
+} from "@liftedinit/many-js"
 
 const network = new Network("/api", identity)
 network.apply([Account, Base, Events, IdStore, Ledger])
@@ -93,14 +100,17 @@ You will get a response in json format with this structure:
 
 ### Account
 
+```ts
+// add the Account module
+import { Account } from "@liftedinit/many-js"
+network.apply([Account])
+```
+
 #### create
 
+- create an account with roles and features
+
 ```ts
-import { Network, Account } from "many-js"
-
-const network = new Network("/api", identity)
-network.apply([Account])
-
 const roles = new Map().set("ma123....", [
   AccountRole[AccountRole.canMultisigApprove],
   AccountRole[AccountRole.canMultisigSubmit],
@@ -121,9 +131,9 @@ await network.account.create("account name", roles, features)
 
 #### addFeatures
 
-```ts
-network.apply([Account])
+- add roles and features to an existing account
 
+```ts
 const roles = new Map().set("ma321.....", [
   AccountRole[AccountRole.canLedgerTransact],
 ])
@@ -144,9 +154,9 @@ await network.account.addFeatures({ account: "ma12345.....", roles, features })
 
 #### setDescription
 
-```ts
-network.apply([Account])
+- modify the description of an existing account
 
+```ts
 const accountAddress = "ma987....."
 
 await network.account.setDescription(
@@ -157,9 +167,9 @@ await network.account.setDescription(
 
 #### addRoles
 
-```ts
-network.apply([Account])
+- add roles to an existing account
 
+```ts
 const accountAddress = "ma987....."
 const roles = new Map()
   .set("ma321.....", [AccountRole[AccountRole.canLedgerTransact]])
@@ -172,9 +182,9 @@ await network.account.addRoles(accountAddress, roles)
 
 #### removeRoles
 
-```ts
-network.apply([Account])
+- remove roles to an existing account
 
+```ts
 const accountAddress = "ma987....."
 const roles = new Map().set("ma321.....", [
   AccountRole[AccountRole.canLedgerTransact],
@@ -188,7 +198,69 @@ await network.account.removeRoles(accountAddress, roles)
 - get multisig transaction info given a token
 
 ```ts
-network.apply([Account])
-
 await network.account.multisigInfo(token)
+```
+
+### Blockchain
+
+```ts
+// first apply the blockchain module
+import { Blockchain } from "@liftedinit/many-js"
+network.apply([Blockchain])
+```
+
+#### info
+
+- get info about blockchain
+
+```ts
+const res = await network.blockchain.info()
+```
+
+#### block
+
+- get info about a single block by block hash or height
+
+```ts
+const res = await network.blockchain.block(SingleBlockQueryType.height, 12345)
+```
+
+#### list
+
+- get a list of blocks by height or time
+
+```ts
+const res = await network.blockchain.list({
+  queryType: RangeBlockQueryType.height,
+  count: 10,
+  order: ListOrderType.ascending,
+  range: [
+    { boundType: BoundType.inclusive, value: 95 },
+    { boundType: BoundType.inclusive, value: 100 },
+  ],
+})
+```
+
+#### transaction
+
+- get transaction by transaction hash
+
+```ts
+const res = await network.blockchain.transaction(txnHash)
+```
+
+#### request
+
+- get request data of a transaction via transaction hash
+
+```ts
+const res = await network.blockchain.request(txnHash)
+```
+
+#### response
+
+- get response data of a transaction via transaction hash
+
+```ts
+const res = await network.blockchain.response(txnHash)
 ```
